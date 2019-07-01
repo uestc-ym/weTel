@@ -10,5 +10,5 @@ export default {
   name: 'app'
 };
 </script>
-<style lang="postcss">
+<style lang="less">
 </style>
