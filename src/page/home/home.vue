@@ -33,11 +33,12 @@ export default {
     }
   },
   mounted() {
+    console.log(window.appData);
     this.drawCanvas();
   },
   methods: {
     goPageOne() {
-      this.$router.push('/page/one');
+      this.$router.push('/app/page/one');
     },
     drawCanvas() {
       const canvas = document.getElementById('test-canvas');

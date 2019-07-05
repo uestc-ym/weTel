@@ -17,6 +17,10 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const OptimizeCSSPlugin = require("optimize-css-assets-webpack-plugin");
 //一个拷贝文件的webpack插件！
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+// js压缩插件
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+// 配置VueLoaderPlugin
+const { VueLoaderPlugin } = require('vue-loader');
 
 //资源路径
 function assetsPath(_path) {
@@ -44,7 +48,7 @@ const prodConf = merge(baseConf, {
       {
         test: /\.vue$/,
         loader: "vue-loader",
-        options: prodConfig.vueloaderConf
+        //options: prodConfig.vueloaderConf
       },
       {
         test: /\.css$/,
@@ -62,22 +66,40 @@ const prodConf = merge(baseConf, {
       }
     ]
   },
+  optimization: {
+    minimizer: [
+      // we specify a custom UglifyJsPlugin here to get source maps in production
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        uglifyOptions: {
+          compress: false,
+        },
+        sourceMap: true
+      })
+    ],
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          chunks: "initial",
+          test: "vendor",
+          name: "vendor",
+          enforce: true
+        }
+      }
+    }
+  },
   plugins: [
+    // make sure to include the plugin for vue-loader@15.xxx
+    new VueLoaderPlugin(),
+
     //每个chunk头部添加hey,xc-cli!
     new webpack.BannerPlugin("hey,xc-cli"),
-
-    //压缩js
-    new webpack.optimize.UglifyJsPlugin({
-      parallel: true,
-      compress: {
-        warnings: false
-      }
-    }),
 
     //分离入口引用的css,不内嵌到js bundle中!
 
     new ExtractTextPlugin({
-      filename: assetsPath("css/[name].[contenthash].css"),
+      filename: assetsPath("css/[name].[hash].css"),
       allChunks: false
     }),
 
@@ -92,35 +114,6 @@ const prodConf = merge(baseConf, {
 
     //抽离公共模块,合成一个chunk,在最开始加载一次,便缓存使用,用于提升速度!
 
-    // 1. 第三方库chunk
-    new webpack.optimize.CommonsChunkPlugin({
-      name: "vendor",
-      minChunks: function(module) {
-        //在node_modules的js文件!
-        return (
-          module.resource &&
-          /\.js$/.test(module.resource) &&
-          module.resource.indexOf(path.join(__dirname, "../node_modules")) === 0
-        );
-      }
-    }),
-
-    // 2. 缓存chunk
-    new webpack.optimize.CommonsChunkPlugin({
-      name: "manifest",
-      minChunks: Infinity
-    }),
-    // 3.异步 公共chunk
-    new webpack.optimize.CommonsChunkPlugin({
-      name: "app",
-      children: true,
-      // (选择所有被选 chunks 的子 chunks)
-      async: true,
-      // (创建一个异步 公共chunk)
-      minChunks: 3
-      // (在提取之前需要至少三个子 chunk 共享这个模块)
-    }),
-
     //将整个文件复制到构建输出指定目录下
     new CopyWebpackPlugin([
       {
@@ -134,7 +127,7 @@ const prodConf = merge(baseConf, {
     new HtmlWebpackPlugin({
       filename: path.resolve(__dirname, "../public/index.html"),
       template: "index.html",
-      favicon: path.resolve(__dirname, "../favicon.ico"),
+      //favicon: path.resolve(__dirname, "../favicon.ico"),
       //js资源插入位置,true表示插入到body元素底部
       inject: true,
       //压缩配置
