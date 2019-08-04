@@ -29,7 +29,8 @@ module.exports = {
       // import Vue from 'vue/dist/vue.esm.js'可以写成 import Vue from 'vue'
       // 键后加上$,表示精准匹配！
       vue$: "vue/dist/vue.esm.js",
-      "@": resolve("src"),
+      "@client": resolve("src/client"),
+      "@server": resolve("src/server"),
       utils: resolve("src/utils"),
       components: resolve("src/components"),
       public: resolve("public")

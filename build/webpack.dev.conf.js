@@ -67,6 +67,9 @@ const devConf = merge(baseConf, {
         use: [
           "vue-style-loader",
           {
+            loader: "style-loader"
+          },
+          {
             loader: "css-loader",
             options: {
               sourceMap: true
@@ -97,12 +100,6 @@ const devConf = merge(baseConf, {
               sourceMap: true
             }
           },
-          {
-            loader: "postcss-loader",
-            options: {
-              sourceMap: true
-            }
-          }
         ]
       }
     ]

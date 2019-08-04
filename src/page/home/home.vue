@@ -1,137 +1,78 @@
 <template>
 <div class="home">
-    hello,world!
-
-    <div>
-      <span class="text home-one" @click="goPageOne">one</span>
-      <span class="text home-two">two</span>
-      <span class="text home-three">three</span>
+  <div class="home-content">
+    <div class="home-content_users">
+      <div class="item" v-for="(item, idx) in users" :key="idx">
+        <img :src="item.profile" class="img" />
+        <div class="right">
+          <div class="name">{{item.name}}</div>
+          <div class="msg">{{item.msg}}</div>
+        </div>
+      </div>
     </div>
-    <div class="content">
-      <span class="content-a">contentA</span>
-      <span class="content-b">contentB</span>
-      <span class="content-c">contentC</span>
-    </div>
-
-    <div class="data">{{name}}</div>
-
-    <div class="canvas-wrapper">
-      <canvas id="test-canvas" />
-      <img style="position: absolute;top: -1000px;left: -1000px;" id="img" src="https://p0.meituan.net/scarlett/179002cea64a2add40fb2eeaa7bc046e19731.png" />
-      <img style="position: absolute;top: -9000px;left: -9000px;" id="imgFooter" src="https://p0.meituan.net/scarlett/1e722b6b91e529de108a88d1888839359923.png" />
-    </div>
-
   </div>
+</div>
 </template>
+
 <script>
 export default {
-  name: "home",
   data() {
-    let a = () => 'yemao';
     return {
-      name: a()
-    }
-  },
-  mounted() {
-    console.log(window.appData);
-    this.drawCanvas();
-  },
-  methods: {
-    goPageOne() {
-      this.$router.push('/app/page/one');
-    },
-    drawCanvas() {
-      const canvas = document.getElementById('test-canvas');
-      canvas.width = 596;
-      canvas.height = 842;
-      canvas.style.width = '200px';
-      canvas.style.height = '283px';
-      const ctx = canvas.getContext('2d');
-
-      ctx.fillStyle = '#F9BE00';
-      ctx.fillRect(0, 0, 596, 842);
-
-      ctx.fillStyle = 'blue';
-      ctx.fillRect(0, 0, 596, 172);
-
-      this.assetRules.forEach((i, idx) => {
-        ctx.textAlign = 'end';
-        ctx.font = '40px sans-serif';
-        ctx.fillStyle = '#040000';
-        ctx.fillText(`充${i.deposit}元`, 288, 232 + idx * 50);
-
-        ctx.textAlign = 'start';
-        ctx.font = '40px sans-serif';
-        ctx.fillStyle = '#ff5527';
-        ctx.fillText(`送${i.grant}元`, 308, 232 + idx * 50);
-      });
-
-      window.img.onload = () => {
-        ctx.drawImage(document.getElementById('img'), 76, 48);        
-      };
-      window.imgFooter.onload = () => {
-        ctx.drawImage(document.getElementById('imgFooter'), 117, 657);
-      }
+      users: [{
+        name: 'yemao1',
+        profile: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1564931888461&di=4e095b77b7e16cab3c0516292caf116f&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F01%2F56%2F69%2F585747cfd354024.jpg',
+        userId: '1212',
+        msg: '你好吗奋斗',
+      }, {
+        name: 'xiaoming',
+        profile: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1564931888461&di=4e095b77b7e16cab3c0516292caf116f&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F01%2F56%2F69%2F585747cfd354024.jpg',
+        userId: '121fds',
+        msg: '你发的时候',
+      }]
     }
   },
   computed: {
-    assetRules() {
-      return [{
-        deposit: 100,
-        grant: 10
-      }, {
-        deposit: 1000,
-        grant: 99
-      }, {
-        deposit: 99,
-        grant: 1
-      }, {
-        deposit: 897,
-        grant: 13
-      }]
-    }
+
+  },
+  methods: {
+
   }
-};
-</script>
-<style lang="less">
-body {
-  margin: 0;
 }
+</script>
+
+<style lang="less">
 .home {
-  color: green;
-  &-one {
-    color: red;
-  }
-  .text {
-    font-size: 16px;
-    &:last-child {
-      font-size: 30px;
-      transform: scale(1.5);
+  &-content {
+    padding: 15px 0;
+    color: #333;
+    font-size: 14px;
+    padding: 0 15px;
+    &_users {
+      .item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        .img {
+          width: 40px;
+          border-radius: 4px;
+        }
+        .right {
+          flex: 1;
+          margin-left: 10px;
+          border-bottom: 1px solid #eee;
+          .name {
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 2;
+          }
+          .msg {
+            font-size: 12px;
+            color: #999;
+            line-height: 2;
+          }
+        }
+      }
     }
-  }
-
-  .content {
-    margin-top: 20px;
-    display: flex;
-    color: black;
-    &-a {
-      background: red;
-      width: 100px;    
-    }
-    &-b {
-      text-align: center;
-      background: yellow;
-      flex: 1;
-    }
-    &-c {
-      width: 100px;
-      text-align: right;
-      background: green;
-    }
-  }
-
-  .canvas-wrapper {
-    text-align: center;
   }
 }
 </style>
