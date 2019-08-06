@@ -1,4 +1,5 @@
 const User = require('../../server/service/user.js');
+const Message = require('../../server/service/message.js');
 
 const apiRoutes = [{
   url: '/api/getdata',
@@ -26,14 +27,27 @@ const apiRoutes = [{
   async controller(ctx, next) {
     const body = ctx.request.body;
     const res = await User.signUp(body);
-    console.log(JSON.stringify(res));
     
     if (res.code === 200) {
-      ctx.session.user = body.name;
+      ctx.session.user = {
+        name: body.name
+      };
     } 
 
     ctx.body = res;
+  }
+}, {
+  url: '/api/getmessages',
+  method: 'get',
+  async controller(ctx, next) {
+    let query = ctx.request.query;
+    query = {
+      ...query,
+      from: ctx.session.user.name
+    }
+    console.log(query);
 
+    ctx.body = await Message.getMessagesByUser(query);
   }
 }];
 

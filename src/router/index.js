@@ -36,12 +36,18 @@ export default new Router({
     {
       path: '/app/home',
       name: 'home',
-      component: home
+      component: home,
+      meta: {
+        keepAlive: true
+      }
     },
     {
       path: '/app/home/chat',
       name: 'chat',
-      component: chat
+      component: chat,
+      meta: {
+        keepAlive: true
+      }
     },
     {
       path: '/app/page/one',

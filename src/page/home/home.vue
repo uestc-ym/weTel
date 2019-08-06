@@ -2,7 +2,7 @@
 <div class="home">
   <div class="home-content">
     <div class="home-content_users">
-      <div class="item" v-for="(item, idx) in users" :key="idx">
+      <div class="item" v-for="(item, idx) in users" :key="idx" @click="goChat(item)">
         <img :src="item.profile" class="img" />
         <div class="right">
           <div class="name">{{item.name}}</div>
@@ -35,7 +35,15 @@ export default {
 
   },
   methods: {
-
+    goChat(user) {
+      this.$router.push({
+        path: '/app/home/chat',
+        query: {
+          userId: user.userId,
+          userName: user.name,
+        }
+      })
+    } 
   }
 }
 </script>
