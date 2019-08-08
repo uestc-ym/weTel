@@ -9,7 +9,12 @@
 </template>
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  created() {
+    let recaptchaScript = document.createElement('script')
+    recaptchaScript.setAttribute('src', 'https://cdn.bootcss.com/socket.io/2.0.4/socket.io.slim.js')
+    document.head.appendChild(recaptchaScript)
+  }
 };
 </script>
 <style lang="less">

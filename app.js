@@ -57,3 +57,37 @@ app.use(static(
 app.listen(3030, () => {
   console.log('weTel app is starting at port 3030')
 })
+
+/***************************** socketio -- port: 3031 */ 
+
+const server = require('http').createServer();
+const io = require('socket.io')(server, {origins: '*:*'});
+io.on('connection', socket => {
+  console.log('client socketio connect!');
+  socket.broadcast.emit('user connected!');
+
+  socket.on('message', data => {
+    console.log('messagedata--', data);
+  })
+
+  socket.on('disconnect', () => { 
+    console.log('client socketio disconnect!')
+  });
+});
+server.listen(3031);
+
+let chat = io.of('/chat').on('connection', (socket) => {
+  chat.emit('userInfo', { msg: 'lalalla' }) 
+  
+  socket.on('messagetoserver', data => {
+    console.log(data);
+  
+    socket.emit('messagetoclient', {msg: 'getback'})
+  })
+
+  // disconnect usercount
+  socket.on('disconnect', () => {
+    chat.emit('disconnect', {msg: 'disconnect'})
+  })
+})
+

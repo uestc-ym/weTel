@@ -1,6 +1,7 @@
 const whiteList = ['/api/signup'];
 
 module.exports = async (ctx, next) => {
+  console.log(ctx.req.url, ctx.session)
     if (whiteList.indexOf(ctx.req.url) > -1) {
       await next();
       return;

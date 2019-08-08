@@ -20,6 +20,7 @@ export default {
     document.title = name;
 
     this.getMessages();
+    this.socketInit();
   },
   computed: {
     userName() {
@@ -27,6 +28,27 @@ export default {
     }
   },
   methods: {
+    socketInit() {
+      let chat = io.connect('http://localhost:3031/chat');
+      let broadcast = io.connect('http://localhost:3031');
+
+      broadcast.send('hi');
+
+      broadcast.on('user connected', () => {
+        console.log('server broadcast');
+      })
+
+
+      chat.on('userInfo', data => {
+        console.log(data);
+      })
+
+      chat.emit('messagetoserver', 'hhahahhahaha');
+
+      chat.on('messagetoclient', data => {
+        console.log(data)
+      })
+    },
     getMessages() {
       const query = {
         to: this.userName,
