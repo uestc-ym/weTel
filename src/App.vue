@@ -8,12 +8,24 @@
   </div>
 </template>
 <script>
+import superagent from 'superagent'
+
 export default {
   name: 'app',
   created() {
-    let recaptchaScript = document.createElement('script')
-    recaptchaScript.setAttribute('src', 'https://cdn.bootcss.com/socket.io/2.0.4/socket.io.slim.js')
-    document.head.appendChild(recaptchaScript)
+    this.getUserInfo();
+  },
+  methods: {
+    getUserInfo() {
+      superagent
+        .get('/api/getuserinfo')
+        .end((err, res) => {
+          let body = res && res.body || {};
+          if (body.code === 200) {
+            window.user = body.data;
+          }
+        });
+    }
   }
 };
 </script>

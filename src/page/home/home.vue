@@ -3,10 +3,10 @@
   <div class="home-content">
     <div class="home-content_users">
       <div class="item" v-for="(item, idx) in users" :key="idx" @click="goChat(item)">
-        <img :src="item.profile" class="img" />
+        <img :src="item.profile || defaultProfile" class="img" />
         <div class="right">
           <div class="name">{{item.name}}</div>
-          <div class="msg">{{item.msg}}</div>
+          <div class="msg">{{item.msg || '...'}}</div>
         </div>
       </div>
     </div>
@@ -15,36 +15,46 @@
 </template>
 
 <script>
+import superagent from 'superagent'
+import Toast from '@client/component/Vue/mint/toast';
+
 export default {
   data() {
     return {
-      users: [{
-        name: 'yemao1',
-        profile: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1564931888461&di=4e095b77b7e16cab3c0516292caf116f&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F01%2F56%2F69%2F585747cfd354024.jpg',
-        userId: '1212',
-        msg: '你好吗奋斗',
-      }, {
-        name: 'xiaoming',
-        profile: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1564931888461&di=4e095b77b7e16cab3c0516292caf116f&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F01%2F56%2F69%2F585747cfd354024.jpg',
-        userId: '121fds',
-        msg: '你发的时候',
-      }]
+      users: []
     }
   },
   computed: {
-
+    defaultProfile() {
+      return `https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1564931888461&di=4e095b77b7e16cab3c0516292caf116f&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F01%2F56%2F69%2F585747cfd354024.jpg`
+    }
+  },
+  activated() {
+    this.getUsers();
   },
   methods: {
     goChat(user) {
       this.$router.push({
         path: '/app/home/chat',
         query: {
-          userId: user.userId,
-          userName: user.name,
+          toUserName: user.name,
         }
       })
-    } 
-  }
+    },
+    getUsers() {
+      superagent
+        .get('/api/getusers')
+        .end((err, res) => {
+          let body = res && res.body || {};
+          if (body.code === 200) {
+            this.users = (body.data || []).filter(i => i.name !== window.user.name);
+          } else {
+            const errMsg = err && err.message || body.error;
+            Toast(errMsg);
+          }
+        });
+    },
+  },
 }
 </script>
 

@@ -37,6 +37,25 @@ const apiRoutes = [{
     ctx.body = res;
   }
 }, {
+  url: '/api/getuserinfo',
+  method: 'get',
+  async controller(ctx, next) {
+    ctx.body = {
+      code: 200,
+      data: {
+        ...ctx.session.user
+      }
+    };
+  }
+}, {
+  url: '/api/getusers',
+  method: 'get',
+  async controller(ctx, next) {
+
+    const res = await User.getAllUsers();
+    ctx.body = res;
+  }
+}, {
   url: '/api/getmessages',
   method: 'get',
   async controller(ctx, next) {
@@ -45,8 +64,7 @@ const apiRoutes = [{
       ...query,
       from: ctx.session.user.name
     }
-    console.log(query);
-
+    
     ctx.body = await Message.getMessagesByUser(query);
   }
 }];

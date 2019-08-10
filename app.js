@@ -6,6 +6,7 @@ const appRoutes = require('./controller/index.js')
 const apiRoutes = require('./controller/api/index.js')
 const session=require('koa-session')
 const auth = require('./server/middlewares/auth.js')
+const socketIo = require('./server/middlewares/socketApi.js')
 
 const app = new Koa()
 //process.env.NODE_ENV = 'production'
@@ -14,7 +15,7 @@ const app = new Koa()
 app.keys = ['this is my secret and fuck you all']; 
 app.use(session({
   key: 'koa:sess', /** cookie的名称，可以不管 */
-  maxAge: 7200000, /** (number) maxAge in ms (default is 1 days)，cookie的过期时间，这里表示2个小时 */
+  maxAge: 3600000 * 24, /** (number) maxAge in ms (default is 1 days)，cookie的过期时间 */
   overwrite: true, /** (boolean) can overwrite or not (default true) */
   httpOnly: true, /** (boolean) httpOnly or not (default true) */
   signed: true, /** (boolean) signed or not (default true) */
@@ -58,36 +59,5 @@ app.listen(3030, () => {
   console.log('weTel app is starting at port 3030')
 })
 
-/***************************** socketio -- port: 3031 */ 
 
-const server = require('http').createServer();
-const io = require('socket.io')(server, {origins: '*:*'});
-io.on('connection', socket => {
-  console.log('client socketio connect!');
-  socket.broadcast.emit('user connected!');
-
-  socket.on('message', data => {
-    console.log('messagedata--', data);
-  })
-
-  socket.on('disconnect', () => { 
-    console.log('client socketio disconnect!')
-  });
-});
-server.listen(3031);
-
-let chat = io.of('/chat').on('connection', (socket) => {
-  chat.emit('userInfo', { msg: 'lalalla' }) 
-  
-  socket.on('messagetoserver', data => {
-    console.log(data);
-  
-    socket.emit('messagetoclient', {msg: 'getback'})
-  })
-
-  // disconnect usercount
-  socket.on('disconnect', () => {
-    chat.emit('disconnect', {msg: 'disconnect'})
-  })
-})
 

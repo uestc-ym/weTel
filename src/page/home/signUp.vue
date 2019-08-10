@@ -49,7 +49,11 @@ export default {
     },
     login() {
       superagent
-      .post('/api/signup', {name: this.name, password: this.password})
+      .post('/api/signup', {
+        name: this.name, 
+        password: this.password,
+        createdTime: +new Date(),
+      })
       .end((err, res) => {
         let body = res && res.body;
         if (body.code === 200) {

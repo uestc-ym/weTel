@@ -5,7 +5,7 @@ function Message() {
 
 }
 
-Message.sendMsg = async (msg) => {
+Message.saveMsg = async (msg) => {
   const res = await new Promise((resolve, reject) => {
     redisClient.incr('message:id', (err, id) => {
       if (err) {
@@ -16,7 +16,7 @@ Message.sendMsg = async (msg) => {
         'from', msg.from, 
         'to', msg.to,
         'content', msg.content, 
-        'createdTime', msg.sendTime, (err, res) => {
+        'createdTime', msg.createdTime, (err, res) => {
           if (err) {
             reject ({
               code: 500,
@@ -25,7 +25,7 @@ Message.sendMsg = async (msg) => {
             return;
           }
 
-          redisClient.rpush(`msseagesFrom${msg.from}To${msg.to}`, id, (err, res) => {
+          redisClient.rpush(`messagesFrom${msg.from}To${msg.to}`, id, (err, res) => {
             if (err) {
               reject ({
                 code: 500,
@@ -73,7 +73,7 @@ Message.getMessagesByUser = async (user) => {
 
   msgIds.forEach(id => {
     let promise = new Promise((resolve, reject) => {
-      redisClient.hget(`message${id}`, (err, res) => {
+      redisClient.hgetall(`message${id}`, (err, res) => {
         if (err) {
           reject ({
             code: 500,
@@ -99,7 +99,7 @@ Message.getMessagesByUser = async (user) => {
   } else {
     return {
       code: 200,
-      data: (msgs.data || []).map(i => i.data)
+      data: (msgs || []).map(i => i.data)
     }
   }
 }
