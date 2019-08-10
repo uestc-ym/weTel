@@ -29,11 +29,30 @@ export default {
 
     }
   },
+  activated() {
+    document.body.style.background = '#ddd';
+    const name = this.toUserName;
+    document.title = name;
+
+    this.getMessages();
+  },
+  deactivated() {
+    document.body.style.background = '#fff';
+  },
   created() {
     $chat = io('http://localhost:3031/chat');
 
     $chat.on('getMsg', (res) => {
-      console.log(res);
+      let msg = res && res.msg || {};
+      let isShouldReceiveMsg = (
+        msg.from === this.userName && msg.to === this.toUserName
+      ) || (
+        msg.from === this.toUserName && msg.to === this.userName
+      )
+      if (!isShouldReceiveMsg) {
+        return
+      }
+
       if (res.code !== 200) {
         Toast('消息发送失败')
       } else {
@@ -41,14 +60,6 @@ export default {
         this.messages = this.messages.concat(res.msg);
       }
     })
-  },
-  mounted() {
-  },
-  activated() {
-    const name = this.toUserName;
-    document.title = name;
-
-    this.getMessages();
   },
   computed: {
     userName() {
@@ -98,7 +109,6 @@ export default {
 
 <style lang="less">
 .chatPage {
-  background: #ddd;
   height: 100vh;
   padding: 15px;
   padding-bottom: 50px;

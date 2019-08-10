@@ -11,11 +11,15 @@
       </div>
     </div>
   </div>
+  <div class="footer">
+    <mt-button @click="logOut">退出</mt-button>
+  </div>
 </div>
 </template>
 
 <script>
 import superagent from 'superagent'
+import Button from '@client/component/Vue/mint/button';
 import Toast from '@client/component/Vue/mint/toast';
 
 export default {
@@ -23,6 +27,9 @@ export default {
     return {
       users: []
     }
+  },
+  components: {
+    'mt-button': Button
   },
   computed: {
     defaultProfile() {
@@ -47,13 +54,26 @@ export default {
         .end((err, res) => {
           let body = res && res.body || {};
           if (body.code === 200) {
-            this.users = (body.data || []).filter(i => i.name !== window.user.name);
+            this.users = (body.data || []).filter(i => i.name !== (window.user && window.user.name));
           } else {
             const errMsg = err && err.message || body.error;
             Toast(errMsg);
           }
         });
     },
+    logOut() {
+      superagent
+        .post('/api/logout')
+        .end((err, res) => {
+          let body = res && res.body || {};
+          if (body.code === 200) {
+            this.$router.push('/app/signUp')
+          } else {
+            const errMsg = err && err.message || body.error;
+            Toast(errMsg);
+          }
+        });
+    }
   },
 }
 </script>
@@ -90,6 +110,15 @@ export default {
           }
         }
       }
+    }
+  }
+  .footer {
+    text-align: center;
+    padding: 15px;
+    .mint-button {
+      width: 100%;
+      background: #0071c5;
+      color: #fff;
     }
   }
 }

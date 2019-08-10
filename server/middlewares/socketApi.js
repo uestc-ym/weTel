@@ -23,15 +23,29 @@ let chat = io.of('/chat');
 
 chat.on('connection', (socket) => {
   let socketId = socket.id;
-console.log(socketId);
+
   socket.on('sendMsg', async (msg) => {
     const res = await Message.saveMsg(msg);
-    console.log(res);
 
-    chat.sockets[socketId].emit('getMsg', {
+    // 指定socketId发送消息
+    /*chat.sockets[socketId].emit('getMsg', {
+      code: res.code,
+      msg
+    });*/
+
+    // 给当前的socket发送信息
+    socket.emit('getMsg', {
       code: res.code,
       msg
     });
+
+    if (res.code === 200) {
+      // 给除了自己的其他人发送信息
+      socket.broadcast.emit('getMsg', {
+        code: 200,
+        msg
+      });
+    }
   })
 
   // disconnect usercount

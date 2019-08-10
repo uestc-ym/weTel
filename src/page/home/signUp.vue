@@ -27,7 +27,9 @@ export default {
     return {
       name: '',
       password: '',
-      isSignUpState: true
+      isSignUpState: true,
+      
+      saving: false,
     }
   },
   components: {
@@ -48,16 +50,24 @@ export default {
       this.isSignUpState = !this.isSignUpState;
     },
     login() {
+      if (this.saving) {
+        return
+      }
+      this.saving = true;
+
       superagent
       .post('/api/signup', {
         name: this.name, 
         password: this.password,
         createdTime: +new Date(),
+        type: this.isSignUpState ? 1 : 2
       })
       .end((err, res) => {
+        this.saving = false;
+    
         let body = res && res.body;
         if (body.code === 200) {
-          Toast('注册成功');
+          Toast(`${this.isSignUpState ? '注册' : '登录'}成功`);
           this.$router.push('/app/home');
         } else {
           const errMsg = err && err.message || body.error;
