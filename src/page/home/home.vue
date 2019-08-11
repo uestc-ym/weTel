@@ -78,7 +78,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .home {
   &-content {
     padding: 15px 0;

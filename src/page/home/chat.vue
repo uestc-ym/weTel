@@ -107,7 +107,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .chatPage {
   height: 100vh;
   padding: 15px;

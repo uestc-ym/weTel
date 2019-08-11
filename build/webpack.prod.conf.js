@@ -60,7 +60,7 @@ const prodConf = merge(baseConf, {
       {
         test: /\.less$/,
         use: ExtractTextPlugin.extract({
-          use: ["css-loader", "less-loader", "postcss-loader"],
+          use: ["css-loader", "less-loader",],
           fallback: "vue-style-loader"
         })
       }

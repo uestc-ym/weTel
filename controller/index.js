@@ -24,16 +24,20 @@ function render({
 
 const routes = [{
   url: [
+    '/app/test',
+    '/app/page/one',
+
     '/app',
     '/app/home',
-    '/app/page/one'
+    '/app/signUp',
+    '/app/home/chat'
   ],
   async controller(ctx, next) {
     const appData = {
       name: 'yemao',
       pois: [{poiName: 'fdsa', poiId: 23432}, {poiName: 'rewrwr', poiId: 8989}]
     };
-  
+    
     const res = await render({
       title: 'YYY', 
       appData

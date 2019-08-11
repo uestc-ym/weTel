@@ -12,13 +12,13 @@ const app = new Koa()
 //process.env.NODE_ENV = 'production'
 
 // session加密处理
-app.keys = ['this is my secret and fuck you all']; 
+app.keys = ['this is my secret']; 
 app.use(session({
-  key: 'koa:sess', /** cookie的名称，可以不管 */
-  maxAge: 3600000 * 24, /** (number) maxAge in ms (default is 1 days)，cookie的过期时间 */
-  overwrite: true, /** (boolean) can overwrite or not (default true) */
-  httpOnly: true, /** (boolean) httpOnly or not (default true) */
-  signed: true, /** (boolean) signed or not (default true) */
+  key: 'koa:sess', 
+  maxAge: 3600000 * 24, 
+  overwrite: true,
+  httpOnly: true, 
+  signed: true, 
 }, app));
 
 // middlewares

@@ -79,7 +79,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .signup-page {
   box-sizing: border-box;
   height: 100vh;
