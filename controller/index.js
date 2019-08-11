@@ -37,7 +37,7 @@ const routes = [{
       name: 'yemao',
       pois: [{poiName: 'fdsa', poiId: 23432}, {poiName: 'rewrwr', poiId: 8989}]
     };
-    
+
     const res = await render({
       title: 'YYY', 
       appData

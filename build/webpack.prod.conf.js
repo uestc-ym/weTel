@@ -78,6 +78,7 @@ const prodConf = merge(baseConf, {
         sourceMap: true
       })
     ],
+
     splitChunks: {
       cacheGroups: {
         vendor: {
@@ -100,7 +101,7 @@ const prodConf = merge(baseConf, {
 
     new ExtractTextPlugin({
       filename: assetsPath("css/[name].[hash].css"),
-      allChunks: false
+      allChunks: true
     }),
 
     //压缩css

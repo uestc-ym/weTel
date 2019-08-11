@@ -1,5 +1,5 @@
 <template>
-<div>page one
+<div class="pageOne">page one
   <div>{{testData}}</div>
 </div>
 </template>
@@ -31,3 +31,9 @@ export default {
   }
 }
 </script>
+
+<style lang="less">
+.pageOne {
+  color: red
+}
+</style>

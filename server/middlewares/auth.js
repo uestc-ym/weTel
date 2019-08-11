@@ -1,8 +1,11 @@
-const whiteList = ['/api/signup'];
+const whiteList = ['/api/signup', '/app/signup'];
+const skipPath = [
+  /^\/public\//
+];
 
 module.exports = async (ctx, next) => {
   console.log(ctx.req.url, ctx.session)
-    if (whiteList.indexOf(ctx.req.url) > -1) {
+    if (whiteList.indexOf(ctx.req.url) > -1 || skipPath.some(i => i.test(ctx.req.url))) {
       await next();
       return;
     } 

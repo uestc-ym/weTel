@@ -9,7 +9,7 @@
   <div style="height: 50px; padding-bottom: env(safe-area-inset-bottom);" />
   <div class="footer">
     <input v-model="inputMsg" class="input" />
-    <span class="send" @click="sendMsg">发送</span>
+    <a class="send" @click="sendMsg">发送</a>
   </div>
 </div>
 </template>
@@ -40,7 +40,7 @@ export default {
     document.body.style.background = '#fff';
   },
   created() {
-    $chat = io('http://localhost:3031/chat');
+    $chat = io('http://e23.fe.dev.sankuai.com/chat');
 
     $chat.on('getMsg', (res) => {
       let msg = res && res.msg || {};
