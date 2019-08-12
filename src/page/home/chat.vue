@@ -40,7 +40,7 @@ export default {
     document.body.style.background = '#fff';
   },
   created() {
-    $chat = io('http://14f.fe.dev.sankuai.com/chat');
+    $chat = io('http://localhost:3031/chat');
 
     $chat.on('getMsg', (res) => {
       let msg = res && res.msg || {};
